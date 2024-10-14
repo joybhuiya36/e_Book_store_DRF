@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class DjangoCrudOpConfig(AppConfig):
+class EBookStoreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'Django_CRUD_OP'
+    name = 'e_book_store'
