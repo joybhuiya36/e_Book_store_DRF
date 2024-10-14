@@ -1,13 +1,13 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer, BookSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .serializers import BookSerializer
 from rest_framework import generics
 from .models import Book
+from rest_framework.permissions import IsAuthenticated
 
 class RegisterView(APIView):
     def post(self, request):
@@ -18,6 +18,7 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
+    
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
@@ -35,6 +36,8 @@ class LoginView(APIView):
 
 
 class CreateBookView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
@@ -49,10 +52,12 @@ class BookListView(generics.ListAPIView):
 class UpdateBookView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]
 
 class DeleteBookView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
